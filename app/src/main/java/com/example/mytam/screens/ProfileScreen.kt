@@ -1,0 +1,117 @@
+package com.example.kelompok_nokonteks_tam_nowa.screens
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.kelompok_nokonteks_tam_nowa.R
+import com.example.kelompok_nokonteks_tam_nowa.component.SectionHeader
+import com.example.kelompok_nokonteks_tam_nowa.ui.theme.*
+
+@Composable
+fun ProfileScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(DarkBlue)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(top = 48.dp, bottom = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.img),
+                contentDescription = "Profile Picture",
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("KitaPastiBisa", color = White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text("KitaPastiBisa@gmail.com", color = White.copy(alpha = 0.7f), fontSize = 12.sp)
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = BackgroundGray,
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+        ) {
+            LazyColumn(modifier = Modifier.padding(16.dp)) {
+                item { SectionHeader("AKUN & KEUANGAN") }
+                item { ProfileMenuItem("Kelola Akun", "3 akun terdaftar", Icons.Outlined.AccountBalance) { navController.navigate("accounts") } }
+                item { ProfileMenuItem("Laporan Keuangan", "Ringkasan bulanan", Icons.Outlined.BarChart) {} }
+
+                item { SectionHeader("PENGATURAN") }
+                item { ProfileMenuItem("Notifikasi", "Aktif", Icons.Outlined.Notifications) {} }
+                item { ProfileMenuItem("Keamanan & Privasi", "Enkripsi lokal aktif", Icons.Outlined.Lock) {} }
+                item { ProfileMenuItem("Bahasa", "Bahasa Indonesia", Icons.Outlined.Language) {} }
+
+                item { SectionHeader("TENTANG") }
+                item { ProfileMenuItem("Tentang NOWA", "v1.0.0 · Universitas Lampung", Icons.Outlined.Info) {} }
+
+                item { Spacer(modifier = Modifier.height(24.dp)) }
+                item {
+                    Button(
+                        onClick = { navController.navigate("splash") { popUpTo(0) } },
+                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = RedExpense.copy(alpha = 0.1f)),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text("🚪 Keluar dari Akun", color = RedExpense, fontWeight = FontWeight.Bold)
+                    }
+                }
+                item { Spacer(modifier = Modifier.height(12.dp)) }
+                item {
+                    Text(
+                        "← Kembali ke Dashboard",
+                        modifier = Modifier.fillMaxWidth().clickable { navController.popBackStack() },
+                        textAlign = TextAlign.Center,
+                        color = DarkBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileMenuItem(title: String, subtitle: String, icon: ImageVector, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = White),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(modifier = Modifier.size(40.dp).background(BackgroundGray, RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
+                Icon(icon, contentDescription = null, tint = DarkBlue, modifier = Modifier.size(20.dp))
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, fontWeight = FontWeight.Bold, color = TextBlack)
+                Text(subtitle, fontSize = 10.sp, color = TextGray)
+            }
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = TextGray)
+        }
+    }
+}
