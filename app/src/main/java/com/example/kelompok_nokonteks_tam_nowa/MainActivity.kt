@@ -16,7 +16,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.kelompok_nokonteks_tam_nowa.component.AddTransactionBottomSheet
 import com.example.kelompok_nokonteks_tam_nowa.component.BottomNavigationBar
 import com.example.kelompok_nokonteks_tam_nowa.screens.*
 import com.example.kelompok_nokonteks_tam_nowa.ui.theme.DarkBlue
@@ -41,18 +40,18 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    var showAddTransaction by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != "splash" && currentRoute != "login" && currentRoute != "register" && currentRoute != "profile" && currentRoute != "accounts" && currentRoute != "account_detail") {
+            val hideBottomBar = listOf("splash", "login", "register", "profile", "accounts", "account_detail", "add_account", "edit_account", "add_goal", "add_budget", "add_transaction", "notifications", "about")
+            if (currentRoute !in hideBottomBar) {
                 BottomNavigationBar(navController)
             }
         },
         floatingActionButton = {
             if (currentRoute == "home" || currentRoute == "history") {
                 FloatingActionButton(
-                    onClick = { showAddTransaction = true },
+                    onClick = { navController.navigate("add_transaction") },
                     containerColor = DarkBlue,
                     contentColor = White,
                     shape = CircleShape,
@@ -73,14 +72,17 @@ fun MainScreen(navController: NavHostController) {
             composable("register") { RegisterScreen(navController) }
             composable("home") { HomeScreen(navController) }
             composable("history") { HistoryScreen() }
-            composable("goals") { GoalsScreen() }
+            composable("goals") { GoalsScreen(navController) }
             composable("accounts") { AccountsScreen(navController) }
             composable("account_detail") { AccountDetailScreen(navController) }
             composable("profile") { ProfileScreen(navController) }
-        }
-
-        if (showAddTransaction) {
-            AddTransactionBottomSheet(onDismiss = { showAddTransaction = false })
+            composable("add_account") { AddAccountScreen(navController) }
+            composable("edit_account") { EditAccountScreen(navController) }
+            composable("add_goal") { AddGoalScreen(navController) }
+            composable("add_budget") { AddBudgetScreen(navController) }
+            composable("add_transaction") { AddTransactionScreen(navController) }
+            composable("notifications") { NotificationScreen(navController) }
+            composable("about") { AboutScreen(navController) }
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -19,7 +20,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -34,12 +34,29 @@ fun ProfileScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(DarkBlue)
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+                .padding(top = 24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.background(White.copy(alpha = 0.1f), RoundedCornerShape(12.dp))
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = White)
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Text("Profil Pengguna", color = White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        }
+
         Column(
-            modifier = Modifier.fillMaxWidth().padding(top = 48.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img),
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(80.dp)
@@ -59,15 +76,12 @@ fun ProfileScreen(navController: NavHostController) {
             LazyColumn(modifier = Modifier.padding(16.dp)) {
                 item { SectionHeader("AKUN & KEUANGAN") }
                 item { ProfileMenuItem("Kelola Akun", "3 akun terdaftar", Icons.Outlined.AccountBalance) { navController.navigate("accounts") } }
-                item { ProfileMenuItem("Laporan Keuangan", "Ringkasan bulanan", Icons.Outlined.BarChart) {} }
 
                 item { SectionHeader("PENGATURAN") }
-                item { ProfileMenuItem("Notifikasi", "Aktif", Icons.Outlined.Notifications) {} }
-                item { ProfileMenuItem("Keamanan & Privasi", "Enkripsi lokal aktif", Icons.Outlined.Lock) {} }
-                item { ProfileMenuItem("Bahasa", "Bahasa Indonesia", Icons.Outlined.Language) {} }
+                item { ProfileMenuItem("Notifikasi", "Atur pemberitahuan", Icons.Outlined.Notifications) { navController.navigate("notifications") } }
 
                 item { SectionHeader("TENTANG") }
-                item { ProfileMenuItem("Tentang NOWA", "v1.0.0 · Universitas Lampung", Icons.Outlined.Info) {} }
+                item { ProfileMenuItem("Tentang NOWA", "v1.0.0 • Universitas Lampung", Icons.Outlined.Info) { navController.navigate("about") } }
 
                 item { Spacer(modifier = Modifier.height(24.dp)) }
                 item {
@@ -79,16 +93,6 @@ fun ProfileScreen(navController: NavHostController) {
                     ) {
                         Text("🚪 Keluar dari Akun", color = RedExpense, fontWeight = FontWeight.Bold)
                     }
-                }
-                item { Spacer(modifier = Modifier.height(12.dp)) }
-                item {
-                    Text(
-                        "← Kembali ke Dashboard",
-                        modifier = Modifier.fillMaxWidth().clickable { navController.popBackStack() },
-                        textAlign = TextAlign.Center,
-                        color = DarkBlue,
-                        fontWeight = FontWeight.Bold
-                    )
                 }
             }
         }

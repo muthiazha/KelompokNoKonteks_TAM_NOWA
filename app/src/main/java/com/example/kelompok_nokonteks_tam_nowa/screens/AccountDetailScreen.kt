@@ -24,6 +24,8 @@ import com.example.kelompok_nokonteks_tam_nowa.ui.theme.*
 
 @Composable
 fun AccountDetailScreen(navController: NavHostController) {
+    val cashAccount = globalAccounts.find { it.type == "Cash" }
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +37,7 @@ fun AccountDetailScreen(navController: NavHostController) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = White)
                 }
                 Text("Detail Akun", color = White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                IconButton(onClick = {}, modifier = Modifier.background(NowaSecondary, RoundedCornerShape(12.dp))) {
+                IconButton(onClick = { navController.navigate("edit_account") }, modifier = Modifier.background(NowaSecondary, RoundedCornerShape(12.dp))) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit", tint = DarkBlue)
                 }
             }
@@ -47,17 +49,17 @@ fun AccountDetailScreen(navController: NavHostController) {
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Box(modifier = Modifier.size(56.dp).background(White.copy(alpha = 0.1f), RoundedCornerShape(16.dp)), contentAlignment = Alignment.Center) {
-                        Text("💵", fontSize = 32.sp)
+                        Text(cashAccount?.emoji ?: "💵", fontSize = 32.sp)
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text("Kas / Tunai", color = White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                        Text("Cash · IDR", color = White.copy(alpha = 0.7f), fontSize = 12.sp)
+                        Text(cashAccount?.name ?: "Kas / Tunai", color = White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Text("${cashAccount?.type ?: "Cash"} · IDR", color = White.copy(alpha = 0.7f), fontSize = 12.sp)
                     }
                 }
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Saldo Hari Ini", color = White.copy(alpha = 0.7f), fontSize = 12.sp)
-                    Text("Rp550.000", color = NowaSecondary, fontSize = 36.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(cashAccount?.balance ?: "Rp0", color = NowaSecondary, fontSize = 36.sp, fontWeight = FontWeight.ExtraBold)
                     Text("▼ -18% dari 30 hari lalu", color = RedExpense, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 }
             }
@@ -93,8 +95,8 @@ fun AccountDetailScreen(navController: NavHostController) {
                 item { Spacer(modifier = Modifier.height(24.dp)) }
                 item { Text("Riwayat Akun Ini", fontWeight = FontWeight.Bold, fontSize = 18.sp) }
                 item { Spacer(modifier = Modifier.height(12.dp)) }
-                item { TransactionItem(Transaction("Transfer Keluar", "Cash → Luar Wallet", "-Rp200.000", RedExpense, "↗️", "Kemarin")) }
-                item { TransactionItem(Transaction("Free time", "Cash", "+Rp80.000", GreenIncome, "😊", "Kemarin")) }
+                item { TransactionItem(Transaction("Transfer Keluar", "${cashAccount?.name ?: "Cash"} → Luar Wallet", "-Rp200.000", RedExpense, "↗️", "Kemarin")) }
+                item { TransactionItem(Transaction("Free time", cashAccount?.name ?: "Cash", "+Rp80.000", GreenIncome, "😊", "Kemarin")) }
                 item { TransactionItem(Transaction("Makan Siang", "Pengeluaran · Makanan", "-Rp45.000", RedExpense, "🍔", "21 Apr")) }
             }
         }

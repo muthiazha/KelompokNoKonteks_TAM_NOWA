@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TrackChanges
@@ -14,16 +15,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.kelompok_nokonteks_tam_nowa.component.BudgetCard
 import com.example.kelompok_nokonteks_tam_nowa.component.GoalCard
 import com.example.kelompok_nokonteks_tam_nowa.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GoalsScreen() {
-    var showAddGoalSheet by remember { mutableStateOf(false) }
-    var showAddBudgetSheet by remember { mutableStateOf(false) }
+data class GoalData(
+    val name: String,
+    val targetAmount: String,
+    val savedAmount: String,
+    val remainingAmount: String,
+    val progress: Float,
+    val percentage: String,
+    val emoji: String
+)
 
+data class BudgetData(
+    val name: String,
+    val spentAmount: String,
+    val totalAmount: String,
+    val progress: Float,
+    val usageText: String,
+    val remainingText: String,
+    val color: androidx.compose.ui.graphics.Color,
+    val emoji: String
+)
+
+val globalGoals = mutableStateListOf(
+    GoalData("Dana Darurat", "Rp6.000.000", "Rp3.480.000", "Rp2.520.000", 0.58f, "58%", "🏠"),
+    GoalData("Liburan Bali", "Rp2.000.000", "Rp660.000", "Des 2026", 0.33f, "33%", "✈️")
+)
+
+val globalBudgets = mutableStateListOf(
+    BudgetData("Makanan & Minum", "Rp420.000", "Rp600.000", 0.7f, "70% terpakai", "Sisa Rp180.000", DarkBlue, "🍔"),
+    BudgetData("Transportasi", "Rp120.000", "Rp300.000", 0.4f, "40% terpakai", "Sisa Rp180.000", GreenIncome, "🚌"),
+    BudgetData("Hiburan", "Rp195.000", "Rp150.000", 1.0f, "⚠️ Melebihi batas!", "+Rp45.000", RedExpense, "🎮")
+)
+
+@Composable
+fun GoalsScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,19 +82,16 @@ fun GoalsScreen() {
                             color = DarkBlue,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.clickable { showAddGoalSheet = true }
+                            modifier = Modifier.clickable { navController.navigate("add_goal") }
                         )
                     }
                 }
                 item { Spacer(modifier = Modifier.height(12.dp)) }
-                item {
-                    GoalCard("Dana Darurat", "Rp6.000.000", "Rp3.480.000", "Rp2.520.000", 0.58f, "58%", "🏠")
+                items(globalGoals) { goal ->
+                    GoalCard(goal.name, goal.targetAmount, goal.savedAmount, goal.remainingAmount, goal.progress, goal.percentage, goal.emoji)
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
                 item { Spacer(modifier = Modifier.height(12.dp)) }
-                item {
-                    GoalCard("Liburan Bali", "Rp2.000.000", "Rp660.000", "Des 2026", 0.33f, "33%", "✈️")
-                }
-                item { Spacer(modifier = Modifier.height(24.dp)) }
                 item {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Text("Budget Bulanan", fontWeight = FontWeight.Bold, fontSize = 18.sp)
@@ -73,35 +100,16 @@ fun GoalsScreen() {
                             color = DarkBlue,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.clickable { showAddBudgetSheet = true }
+                            modifier = Modifier.clickable { navController.navigate("add_budget") }
                         )
                     }
                 }
                 item { Spacer(modifier = Modifier.height(12.dp)) }
-                item {
-                    BudgetCard("Makanan & Minum", "Rp420.000", "Rp600.000", 0.7f, "70% terpakai", "Sisa Rp180.000", DarkBlue, "🍔")
-                }
-                item { Spacer(modifier = Modifier.height(12.dp)) }
-                item {
-                    BudgetCard("Transportasi", "Rp120.000", "Rp300.000", 0.4f, "40% terpakai", "Sisa Rp180.000", GreenIncome, "🚌")
-                }
-                item { Spacer(modifier = Modifier.height(12.dp)) }
-                item {
-                    BudgetCard("Hiburan", "Rp195.000", "Rp150.000", 1.0f, "⚠️ Melebihi batas!", "+Rp45.000", RedExpense, "🎮")
+                items(globalBudgets) { budget ->
+                    BudgetCard(budget.name, budget.spentAmount, budget.totalAmount, budget.progress, budget.usageText, budget.remainingText, budget.color, budget.emoji)
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
-        }
-    }
-
-    if (showAddGoalSheet) {
-        ModalBottomSheet(onDismissRequest = { showAddGoalSheet = false }) {
-            AddGoalBottomSheet(onDismiss = { showAddGoalSheet = false })
-        }
-    }
-
-    if (showAddBudgetSheet) {
-        ModalBottomSheet(onDismissRequest = { showAddBudgetSheet = false }) {
-            AddBudgetBottomSheet(onDismiss = { showAddBudgetSheet = false })
         }
     }
 }

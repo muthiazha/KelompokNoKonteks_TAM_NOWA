@@ -1,4 +1,4 @@
-package com.example.mytam
+package com.example.kelompok_nokonteks_tam_nowa
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

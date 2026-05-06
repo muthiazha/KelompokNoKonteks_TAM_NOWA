@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,11 +22,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.kelompok_nokonteks_tam_nowa.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+data class AccountData(
+    val name: String,
+    val type: String,
+    val balance: String,
+    val emoji: String,
+    val detail: String = ""
+)
+
+val globalAccounts = mutableStateListOf(
+    AccountData("Kas / Tunai", "Cash", "Rp550.000", "💵"),
+    AccountData("BRI Tabungan", "Bank Account", "Rp2.900.000", "🏦"),
+    AccountData("GoPay", "E-Wallet", "Rp200.000", "💳")
+)
+
 @Composable
 fun AccountsScreen(navController: NavHostController) {
-    var showAddAccount by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,16 +61,12 @@ fun AccountsScreen(navController: NavHostController) {
             shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
         ) {
             LazyColumn(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                item {
-                    AccountListItem("Kas / Tunai", "Cash", "Rp550.000", "💵", White) {
-                        navController.navigate("account_detail")
+                items(globalAccounts) { account ->
+                    AccountListItem(account.name, account.type, account.balance, account.emoji, White) {
+                        if (account.type == "Cash") {
+                            navController.navigate("account_detail")
+                        }
                     }
-                }
-                item {
-                    AccountListItem("BRI Tabungan", "Bank Account", "Rp2.900.000", "🏦", White) {}
-                }
-                item {
-                    AccountListItem("GoPay", "E-Wallet", "Rp200.000", "💳", Color(0xFFFFF9C4)) {}
                 }
                 item {
                     Box(
@@ -67,7 +75,7 @@ fun AccountsScreen(navController: NavHostController) {
                             .height(80.dp)
                             .border(1.dp, DarkBlue.copy(alpha = 0.3f), RoundedCornerShape(24.dp))
                             .background(DarkBlue.copy(alpha = 0.05f), RoundedCornerShape(24.dp))
-                            .clickable { showAddAccount = true },
+                            .clickable { navController.navigate("add_account") },
                         contentAlignment = Alignment.Center
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -77,11 +85,6 @@ fun AccountsScreen(navController: NavHostController) {
                         }
                     }
                 }
-            }
-        }
-        if (showAddAccount) {
-            ModalBottomSheet(onDismissRequest = { showAddAccount = false }) {
-                AddAccountBottomSheet(onDismiss = { showAddAccount = false })
             }
         }
     }

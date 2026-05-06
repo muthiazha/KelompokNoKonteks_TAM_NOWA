@@ -14,7 +14,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -136,11 +138,20 @@ fun LoginScreen(onNavigateToRegister: () -> Unit, onLoginSuccess: () -> Unit) {
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = email,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color(0x00000000),
+                    unfocusedTextColor = Color(0x00000000),
+
+                    focusedLabelColor = Color(0x00000000),
+                    unfocusedLabelColor = Color(0x00000000)
+
+                ),
                 onValueChange = { email = it },
-                placeholder = { Text("nama@email.com", color = Color.LightGray) },
+                placeholder = { Text("nama@email.com", color = Color(0x00000000)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(12.dp)),
+                    .background(Color.White, RoundedCornerShape(12.dp)
+                    ),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true
             )

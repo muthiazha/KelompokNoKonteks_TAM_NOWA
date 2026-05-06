@@ -6,13 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.BarChart
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +33,7 @@ data class Transaction(
     val time: String = "Hari ini"
 )
 
-val recentTransactions = listOf(
+val recentTransactions = mutableStateListOf(
     Transaction("Gaji Bulan April", "Pemasukan · Gaji", "+Rp3.200.000", GreenIncome, "💰"),
     Transaction("Makan Siang", "Pengeluaran · Makanan", "-Rp45.000", RedExpense, "🍔")
 )
@@ -149,7 +148,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             selected = currentRoute == "history",
             onClick = { navController.navigate("history") },
-            icon = { Icon(Icons.AutoMirrored.Filled.BarChart, contentDescription = null) },
+            icon = { Icon(Icons.Default.BarChart, contentDescription = null) },
             label = { Text("RIWAYAT", fontSize = 10.sp, fontWeight = FontWeight.Bold) },
             colors = NavigationBarItemDefaults.colors(selectedIconColor = DarkBlue, unselectedIconColor = TextGray, selectedTextColor = DarkBlue, indicatorColor = Color.Transparent)
         )

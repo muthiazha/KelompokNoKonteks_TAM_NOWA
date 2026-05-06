@@ -23,12 +23,12 @@ fun AuthTextField(label: String, value: String, placeholder: String, onValueChan
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp)),
-            placeholder = { Text(placeholder, color = TextGray.copy(alpha = 0.5f)) },
+            placeholder = { Text(placeholder, color = TextBlack.copy(alpha = 0.5f)) },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = White,
-                unfocusedContainerColor = White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                focusedContainerColor = Color(0x00000000),
+                unfocusedContainerColor = Color(0x00000000),
+                focusedIndicatorColor = Color(0x00000000),
+                unfocusedIndicatorColor = Color(0x00000000)
             ),
             singleLine = true
         )

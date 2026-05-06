@@ -22,15 +22,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.kelompok_nokonteks_tam_nowa.component.Transaction
-import com.example.kelompok_nokonteks_tam_nowa.component.recentTransactions
 import com.example.kelompok_nokonteks_tam_nowa.component.MenuIcon
 import com.example.kelompok_nokonteks_tam_nowa.component.SummaryCard
 import com.example.kelompok_nokonteks_tam_nowa.component.TransactionItem
+import com.example.kelompok_nokonteks_tam_nowa.component.recentTransactions
 import com.example.kelompok_nokonteks_tam_nowa.ui.theme.*
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val totalPemasukan = recentTransactions.filter { it.amount.startsWith("+") }
+        .sumOf { it.amount.replace("+Rp", "").replace(".", "").toLongOrNull() ?: 0L }
+    
+    val totalPengeluaran = recentTransactions.filter { it.amount.startsWith("-") }
+        .sumOf { it.amount.replace("-Rp", "").replace(".", "").toLongOrNull() ?: 0L }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +63,7 @@ fun HomeScreen(navController: NavHostController) {
                             Icon(Icons.Default.Person, contentDescription = "Profile", tint = White)
                         }
                         Spacer(modifier = Modifier.width(8.dp))
-                        IconButton(onClick = {}, modifier = Modifier.background(White.copy(alpha = 0.1f), CircleShape)) {
+                        IconButton(onClick = { navController.navigate("notifications") }, modifier = Modifier.background(White.copy(alpha = 0.1f), CircleShape)) {
                             Icon(Icons.Default.Notifications, contentDescription = "Notifications", tint = NowaSecondary)
                         }
                     }
@@ -118,8 +123,8 @@ fun HomeScreen(navController: NavHostController) {
         ) {
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    SummaryCard("PEMASUKAN", "Rp3.200.000", Icons.Default.Favorite, GreenIncome, Modifier.weight(1f)) {}
-                    SummaryCard("PENGELUARAN", "Rp1.840.000", Icons.Default.Favorite, RedExpense, Modifier.weight(1f)) {}
+                    SummaryCard("PEMASUKAN", "Rp${String.format("%,d", totalPemasukan).replace(",", ".")}", Icons.Default.Favorite, GreenIncome, Modifier.weight(1f)) {}
+                    SummaryCard("PENGELUARAN", "Rp${String.format("%,d", totalPengeluaran).replace(",", ".")}", Icons.Default.Favorite, RedExpense, Modifier.weight(1f)) {}
                 }
             }
             item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -156,7 +161,7 @@ fun HomeScreen(navController: NavHostController) {
                     Text("Lihat semua", color = DarkBlue, fontSize = 12.sp, modifier = Modifier.clickable { navController.navigate("history") })
                 }
             }
-            items(recentTransactions) { transaction: Transaction ->
+            items(recentTransactions) { transaction ->
                 TransactionItem(transaction)
             }
         }
